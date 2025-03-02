@@ -12,19 +12,19 @@ namespace LoginApp
             this.Text = "Admin Login"; // Set form title
         }
 
-        private void btnLogin_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
-            string username = txtUsername.Text;
-            string password = txtPassword.Text;
+            string username = txtUsername.Text.Trim();
+            string password = txtPassword.Text.Trim();
 
             if (AuthenticateUser(username, password))
             {
-                MessageBox.Show("Login Successful!");
+                MessageBox.Show("Login Successful!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 // Open another form or proceed to dashboard
             }
             else
             {
-                MessageBox.Show("Invalid username or password.");
+                MessageBox.Show("Invalid username or password.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -43,6 +43,11 @@ namespace LoginApp
                     return count > 0;
                 }
             }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            // Leave empty if not needed
         }
     }
 }
