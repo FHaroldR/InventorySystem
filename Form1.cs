@@ -20,7 +20,10 @@ namespace LoginApp
             if (AuthenticateUser(username, password))
             {
                 MessageBox.Show("Login Successful!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                // Open another form or proceed to dashboard
+                // Open the Dashboard form
+                Dashboard dashboard = new Dashboard();
+                dashboard.Show();
+                this.Hide(); // Hide the login form
             }
             else
             {
@@ -34,6 +37,20 @@ namespace LoginApp
             using (SQLiteConnection conn = new SQLiteConnection(connectionString))
             {
                 conn.Open();
+
+                // Check if Users table exists
+                string checkTableQuery = "SELECT name FROM sqlite_master WHERE type='table' AND name='Users'";
+                using (SQLiteCommand tableCheckCmd = new SQLiteCommand(checkTableQuery, conn))
+                {
+                    object result = tableCheckCmd.ExecuteScalar();
+                    if (result == null)
+                    {
+                        MessageBox.Show("Users table does not exist.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
+                }
+
+                // Authenticate user
                 string query = "SELECT COUNT(*) FROM Users WHERE Username = @username AND Password = @password";
                 using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
                 {
@@ -41,6 +58,23 @@ namespace LoginApp
                     cmd.Parameters.AddWithValue("@password", password);
                     int count = Convert.ToInt32(cmd.ExecuteScalar());
                     return count > 0;
+                }
+            }
+        }
+
+
+        private bool TableExists(string tableName)
+        {
+            string connectionString = "Data Source=users.db;Version=3;";
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            {
+                conn.Open();
+                string query = "SELECT name FROM sqlite_master WHERE type='table' AND name=@tableName";
+                using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@tableName", tableName);
+                    object result = cmd.ExecuteScalar();
+                    return result != null;
                 }
             }
         }
