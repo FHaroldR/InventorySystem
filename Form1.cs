@@ -83,5 +83,10 @@ namespace LoginApp
         {
             // Leave empty if not needed
         }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
